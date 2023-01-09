@@ -7,21 +7,25 @@ const textarea = document.querySelector(".feedback-form textarea")
 populateTextarea();
 
 form.addEventListener("submit", onFormSubmit);
-textarea.addEventListener("input", throttle(onTextareaInput, 500, { 'trailing': false }));
-email.addEventListener("input", throttle(onEmailInput, 500, { 'trailing': false }));
+textarea.addEventListener("input", throttle(onTextareaInput, 500));
+email.addEventListener("input", throttle(onEmailInput, 500));
 
 const userData = {
-    email: null,
-    message: null,
+    email: "",
+    message: "",
 };
 
 function onFormSubmit(event) {
     event.preventDefault();
-    userData.email = email.value;
-    userData.message = textarea.value;
-    console.log(userData);
-    localStorage.removeItem("feedback-form-state");
-    event.currentTarget.reset();
+    if (email.value && textarea.value) {
+        userData.email = email.value;
+        userData.message = textarea.value;
+        console.log(userData);
+        localStorage.removeItem("feedback-form-state");
+        event.currentTarget.reset();
+        userData.email = "";
+        userData.message = "";
+    }
 }
 
 function setStorage(data) {
@@ -29,12 +33,12 @@ function setStorage(data) {
 }
 
 function onTextareaInput(event) {
-    userData.message = event.currentTarget.value;
+    userData.message = event.target.value;
     setStorage(userData);
 }
 
 function onEmailInput(event) {
-    userData.email = event.currentTarget.value;
+    userData.email = event.target.value;
     setStorage(userData);
 }
 
